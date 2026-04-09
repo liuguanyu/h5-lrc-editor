@@ -111,7 +111,9 @@
 		const reader = new FileReader();
 		reader.onload = (e) => {
 			const content = e.target?.result as string;
-			if (file.name.toLowerCase().endsWith('.lrc')) {
+			// 自动检测：包含 LRC 时间标签则按 LRC 解析，否则按纯文本解析
+			const looksLikeLRC = /\[\d{2}:\d{2}[.:]\d{2,3}\]/.test(content);
+			if (looksLikeLRC) {
 				const result = parseLRC(content);
 				parsedLyrics.set(result.lines);
 				lrcMetadata.set(result.metadata);
